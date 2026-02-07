@@ -15,11 +15,9 @@
       --bg1:#0b0016;
       --bg2:#1a0030;
       --card: rgba(255,255,255,.10);
-      --card2: rgba(255,255,255,.14);
       --text:#fff;
       --muted: rgba(255,255,255,.75);
       --yes:#ff4fa3;
-      --no:#ffffff1e;
       --shadow: 0 18px 60px rgba(0,0,0,.45);
       --radius: 22px;
     }
@@ -151,6 +149,12 @@
       background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
       border:1px solid rgba(255,255,255,.18);
       animation: pop .35s ease;
+
+      /* ✅ para que el texto quede bien ordenado en celular */
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
     }
 
     @keyframes pop{
@@ -159,131 +163,45 @@
     }
 
     .success h2{
-      margin: 2px 0 6px;
+      margin: 2px 0 0;
       font-size: 22px;
       font-weight: 900;
     }
 
     .mediaBox{
-      margin: 10px auto 6px;
+      margin: 0 auto;
       width: min(420px, 100%);
       aspect-ratio: 16/9;
       border-radius: 16px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.18);
       background: rgba(0,0,0,.25);
-      display:grid;
-      place-items:center;
-      color: rgba(255,255,255,.85);
-      padding: 10px;
+      padding: 0;             /* ✅ importante */
     }
 
-    .mediaBox img, .mediaBox video{
+    .mediaBox video{
       width:100%;
       height:100%;
       object-fit:cover;
       display:block;
     }
 
-    /* QR section */
-    .qrWrap{
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.14);
-      text-align:left;
+    .loveText{
+      width: min(420px, 100%);
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      text-align:center;
     }
-
-    .qrTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom: 10px;
+    .loveText .t1{
+      font-weight:900;
+      margin-bottom:6px;
     }
-
-    .qrTitle strong{
-      font-size: 14px;
-      letter-spacing:.2px;
-    }
-
-    .qrGrid{
-      display:grid;
-      grid-template-columns: 1fr 140px;
-      gap:12px;
-      align-items:center;
-    }
-
-    .qrBox{
-      width: 140px;
-      height: 140px;
-      border-radius: 14px;
-      overflow:hidden;
-      background: rgba(255,255,255,.92);
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(255,255,255,.35);
-    }
-
-    #qrcode img, #qrcode canvas{
-      width: 130px !important;
-      height: 130px !important;
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .field label{
-      font-size: 12px;
+    .loveText .t2{
+      font-size:13px;
       color: rgba(255,255,255,.78);
-    }
-
-    .field input{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.18);
-      color: #fff;
-      outline:none;
-      font-weight:700;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-    }
-
-    .smallBtn{
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 900;
-      background: rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-      color:#fff;
-    }
-
-    .smallBtn:hover{ filter: brightness(1.08); }
-
-    .note{
-      margin-top:10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.68);
       line-height: 1.35;
-    }
-
-    /* responsive */
-    @media (max-width: 520px){
-      .qrGrid{ grid-template-columns: 1fr; }
-      .qrBox{ margin-inline:auto; }
-      .qrTitle{ flex-direction:column; align-items:flex-start; }
     }
   </style>
 </head>
@@ -297,7 +215,7 @@
       <h1>¿Quieres ser mi San Valentín?</h1>
       <p>Prometo risas, abrazos y un día bien bonito contigo 🐼✨</p>
 
-      <div class="btnRow">
+      <div class="btnRow" id="btnRow">
         <button id="yesBtn">Sí 💖</button>
         <button id="noBtn">No 🙈</button>
       </div>
@@ -307,26 +225,23 @@
       <!-- ÉXITO -->
       <div class="success" id="successBox">
         <h2>¡Siiii! 💞</h2>
-        <div class="mediaBox" id="mediaBox">
-         <div class="mediaBox" id="mediaBox">
-  <video src="sn.mp4" autoplay loop muted playsinline></video>
-</div>
- <!-- ✅ AQUÍ VA TU GIF O VIDEO DE PANDAS ABRAZÁNDOSE -->
-          <!-- Opción A (GIF):
-               <img src="pandas.gif" alt="Pandas abrazándose">
-          -->
-          <!-- Opción B (VIDEO):
-               <video src="pandas.mp4" autoplay loop muted playsinline></video>
-          -->
-          <div>
-            <div style="font-weight:900; margin-bottom:6px;">Te quiero mucho corazón</div>
-            <div style="font-size:13px; color: rgba(255,255,255,.78);">
-              Nunca me voy a arrepentirte de haberte conocido
-            </div>
-          </div>
+
+        <!-- ✅ Video limpio, sin duplicados -->
+        <div class="mediaBox">
+          <!-- NO autoplay aquí para permitir audio al presionar "Sí" -->
+          <video id="pandaVideo" src="sn.mp4" loop playsinline></video>
         </div>
-        <div class="hint">Tenemos una cita pendiente, yo me encargo de eso💘</div>
+
+        <div class="loveText">
+          <div class="t1">Te quiero mucho, corazón</div>
+          <div class="t2">Nunca me voy a arrepentir de haberte conocido.</div>
+        </div>
+
+        <div class="hint">Tenemos una cita pendiente, yo me encargo de eso 💘</div>
       </div>
+
+    </div>
+  </div>
 
   <script>
     /********************
@@ -351,7 +266,6 @@
 
     function heartPath(c, x, y, s){
       c.beginPath();
-      // forma de corazón (bezier)
       c.moveTo(x, y + s * 0.35);
       c.bezierCurveTo(x - s, y - s * 0.25, x - s * 0.85, y - s * 1.2, x, y - s * 0.75);
       c.bezierCurveTo(x + s * 0.85, y - s * 1.2, x + s, y - s * 0.25, x, y + s * 0.35);
@@ -368,7 +282,7 @@
         a: rand(0.18, 0.55),
         rot: rand(-0.6, 0.6),
         vr: rand(-0.01, 0.01),
-        hue: rand(325, 355) // rosita
+        hue: rand(325, 355)
       }));
     }
     makeHearts();
@@ -404,12 +318,13 @@
     requestAnimationFrame(loop);
 
     /********************
-     * 2) BOTONES SÍ / NO (crecimiento + desaparición)
+     * 2) BOTONES SÍ / NO
      ********************/
     const yesBtn = document.getElementById('yesBtn');
     const noBtn  = document.getElementById('noBtn');
     const hint   = document.getElementById('hint');
     const successBox = document.getElementById('successBox');
+    const btnRow = document.getElementById('btnRow');
 
     let noCount = 0;
     const noTexts = [
@@ -444,16 +359,23 @@
 
     yesBtn.addEventListener('click', () => {
       // Oculta la pregunta y muestra éxito
-      document.querySelector('.btnRow').style.display = 'none';
+      btnRow.style.display = 'none';
       hint.style.display = 'none';
-      successBox.style.display = 'block';
+      successBox.style.display = 'flex';
 
-      // mini “explosión” de corazones extra (rápida)
+      // ✅ Reproducir con audio al dar click (permitido por navegador)
+      const v = document.getElementById("pandaVideo");
+      if (v) {
+        v.muted = false;
+        v.volume = 1;
+        v.play().catch(() => {});
+      }
+
+      // mini “explosión” de corazones extra
       burstHearts();
     });
 
     function burstHearts(){
-      // añade corazones momentáneos (solo visual)
       for(let i=0;i<22;i++){
         hearts.push({
           x: (W/2) + rand(-220,220)*devicePixelRatio,
