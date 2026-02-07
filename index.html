@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>¿Quieres ser mi San Valentín? 💘</title>
+
+  <!-- Tipografía linda (opcional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#0b0016;
+      --bg2:#1a0030;
+      --card: rgba(255,255,255,.10);
+      --card2: rgba(255,255,255,.14);
+      --text:#fff;
+      --muted: rgba(255,255,255,.75);
+      --yes:#ff4fa3;
+      --no:#ffffff1e;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:var(--text);
+      overflow:hidden;
+      background: radial-gradient(1200px 800px at 30% 20%, #3a006e 0%, transparent 55%),
+                  radial-gradient(900px 700px at 70% 80%, #ff2f7d33 0%, transparent 60%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    /* Canvas de corazones */
+    #heartsCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.25));
+    }
+
+    /* Contenedor principal */
+    .wrap{
+      position:relative;
+      z-index:1;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+
+    .card{
+      width:min(520px, 92vw);
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 22px 18px;
+      text-align:center;
+      position:relative;
+    }
+
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      font-weight:700;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+      margin-bottom: 12px;
+    }
+
+    h1{
+      margin: 6px 0 8px;
+      font-size: clamp(26px, 4.2vw, 38px);
+      line-height:1.1;
+      font-weight: 900;
+      text-shadow: 0 12px 24px rgba(0,0,0,.35);
+    }
+
+    p{
+      margin:0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+
+    button{
+      border:0;
+      cursor:pointer;
+      border-radius: 16px;
+      padding: 12px 18px;
+      font-weight: 900;
+      font-size: 16px;
+      transition: transform .15s ease, opacity .2s ease, filter .2s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn{
+      background: radial-gradient(circle at 30% 25%, #ffd1ea 0%, #ff7abf 30%, var(--yes) 70%);
+      color:#2b0017;
+      box-shadow: 0 14px 28px rgba(255,79,163,.22);
+      transform: scale(1);
+      min-width: 170px;
+    }
+
+    #noBtn{
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      min-width: 140px;
+    }
+
+    #noBtn:hover{ filter: brightness(1.08); }
+    #yesBtn:hover{ transform: scale(1.04); }
+
+    .hint{
+      font-size:13px;
+      color: rgba(255,255,255,.72);
+      margin-top: 10px;
+    }
+
+    /* Sección éxito */
+    .success{
+      display:none;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
+      border:1px solid rgba(255,255,255,.18);
+      animation: pop .35s ease;
+    }
+
+    @keyframes pop{
+      from{ transform: translateY(10px) scale(.98); opacity:0 }
+      to{ transform: translateY(0) scale(1); opacity:1 }
+    }
+
+    .success h2{
+      margin: 2px 0 6px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .mediaBox{
+      margin: 10px auto 6px;
+      width: min(420px, 100%);
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      display:grid;
+      place-items:center;
+      color: rgba(255,255,255,.85);
+      padding: 10px;
+    }
+
+    .mediaBox img, .mediaBox video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* QR section */
+    .qrWrap{
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      text-align:left;
+    }
+
+    .qrTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+
+    .qrTitle strong{
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+
+    .qrGrid{
+      display:grid;
+      grid-template-columns: 1fr 140px;
+      gap:12px;
+      align-items:center;
+    }
+
+    .qrBox{
+      width: 140px;
+      height: 140px;
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(255,255,255,.92);
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.35);
+    }
+
+    #qrcode img, #qrcode canvas{
+      width: 130px !important;
+      height: 130px !important;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .field label{
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+    }
+
+    .field input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.18);
+      color: #fff;
+      outline:none;
+      font-weight:700;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    .smallBtn{
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+    }
+
+    .smallBtn:hover{ filter: brightness(1.08); }
+
+    .note{
+      margin-top:10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.68);
+      line-height: 1.35;
+    }
+
+    /* responsive */
+    @media (max-width: 520px){
+      .qrGrid{ grid-template-columns: 1fr; }
+      .qrBox{ margin-inline:auto; }
+      .qrTitle{ flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="heartsCanvas"></canvas>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="badge">💘 Para alguien especial</div>
+      <h1>¿Quieres ser mi San Valentín?</h1>
+      <p>Prometo risas, abrazos y un día bien bonito contigo 🐼✨</p>
+
+      <div class="btnRow">
+        <button id="yesBtn">Sí 💖</button>
+        <button id="noBtn">No 🙈</button>
+      </div>
+
+      <div class="hint" id="hint">Tip: si presionas “No”… pasan cosas 😅</div>
+
+      <!-- ÉXITO -->
+      <div class="success" id="successBox">
+        <h2>¡Siiii! 💞</h2>
+        <div class="mediaBox" id="mediaBox">
+         <div class="mediaBox" id="mediaBox">
+  <video src="sn.mp4" autoplay loop muted playsinline></video>
+</div>
+ <!-- ✅ AQUÍ VA TU GIF O VIDEO DE PANDAS ABRAZÁNDOSE -->
+          <!-- Opción A (GIF):
+               <img src="pandas.gif" alt="Pandas abrazándose">
+          -->
+          <!-- Opción B (VIDEO):
+               <video src="pandas.mp4" autoplay loop muted playsinline></video>
+          -->
+          <div>
+            <div style="font-weight:900; margin-bottom:6px;">Te quiero mucho corazón</div>
+            <div style="font-size:13px; color: rgba(255,255,255,.78);">
+              Nunca me voy a arrepentirte de haberte conocido
+            </div>
+          </div>
+        </div>
+        <div class="hint">Tenemos una cita pendiente, yo me encargo de eso💘</div>
+      </div>
+
+      <!-- QR -->
+      <div class="qrWrap">
+        <div class="qrTitle">
+          <strong>📱 QR para que ella lo escanee</strong>
+          <span style="font-size:12px;color:rgba(255,255,255,.72)">Se genera con el link de la página</span>
+        </div>
+
+        <div class="qrGrid">
+          <div class="field">
+            <label for="urlInput">Link de tu página (si ya la subiste). Si no, déjalo así y luego lo cambias.</label>
+            <input id="urlInput" type="text" spellcheck="false" />
+            <div class="actions">
+              <button class="smallBtn" id="regenBtn">Generar / Actualizar QR</button>
+              <button class="smallBtn" id="copyBtn">Copiar link</button>
+              <button class="smallBtn" id="downloadQrBtn">Descargar QR (PNG)</button>
+            </div>
+            <div class="note" id="qrNote"></div>
+          </div>
+
+          <div class="qrBox">
+            <div id="qrcode"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Librería QR (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    /********************
+     * 1) CORAZONES (CANVAS)
+     ********************/
+    const canvas = document.getElementById('heartsCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, hearts = [];
+    const HEARTS_COUNT = 70;
+
+    function resize(){
+      W = canvas.width = window.innerWidth * devicePixelRatio;
+      H = canvas.height = window.innerHeight * devicePixelRatio;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.setTransform(1,0,0,1,0,0);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+
+    function heartPath(c, x, y, s){
+      c.beginPath();
+      // forma de corazón (bezier)
+      c.moveTo(x, y + s * 0.35);
+      c.bezierCurveTo(x - s, y - s * 0.25, x - s * 0.85, y - s * 1.2, x, y - s * 0.75);
+      c.bezierCurveTo(x + s * 0.85, y - s * 1.2, x + s, y - s * 0.25, x, y + s * 0.35);
+      c.closePath();
+    }
+
+    function makeHearts(){
+      hearts = Array.from({length:HEARTS_COUNT}, () => ({
+        x: rand(0, W),
+        y: rand(0, H),
+        s: rand(10, 26) * devicePixelRatio,
+        vy: rand(0.25, 1.2) * devicePixelRatio,
+        vx: rand(-0.25, 0.25) * devicePixelRatio,
+        a: rand(0.18, 0.55),
+        rot: rand(-0.6, 0.6),
+        vr: rand(-0.01, 0.01),
+        hue: rand(325, 355) // rosita
+      }));
+    }
+    makeHearts();
+
+    function loop(){
+      ctx.clearRect(0,0,W,H);
+
+      for(const h of hearts){
+        h.y -= h.vy;
+        h.x += h.vx;
+        h.rot += h.vr;
+
+        if(h.y < -80 * devicePixelRatio){
+          h.y = H + rand(0, 200);
+          h.x = rand(0, W);
+          h.s = rand(10, 26) * devicePixelRatio;
+          h.vy = rand(0.25, 1.2) * devicePixelRatio;
+          h.a = rand(0.18, 0.55);
+        }
+
+        ctx.save();
+        ctx.translate(h.x, h.y);
+        ctx.rotate(h.rot);
+        ctx.globalAlpha = h.a;
+        ctx.fillStyle = `hsl(${h.hue} 90% 68%)`;
+        heartPath(ctx, 0, 0, h.s);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    /********************
+     * 2) BOTONES SÍ / NO (crecimiento + desaparición)
+     ********************/
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+    const hint   = document.getElementById('hint');
+    const successBox = document.getElementById('successBox');
+
+    let noCount = 0;
+    const noTexts = [
+      "¿Segura? 🙈", "Piénsalo 😅", "Ándale di que sí 🥺",
+      "No seas así 😭", "Última oportunidad 😳", "Ok… pero ¿segura? 😔"
+    ];
+
+    function setYesScale(){
+      const scale = 1 + (noCount * 0.18);
+      yesBtn.style.transform = `scale(${scale})`;
+    }
+
+    function setNoFade(){
+      const opacity = Math.max(0, 1 - (noCount * 0.18));
+      const scale = Math.max(0.6, 1 - (noCount * 0.07));
+      noBtn.style.opacity = opacity.toFixed(2);
+      noBtn.style.transform = `scale(${scale})`;
+      noBtn.style.filter = `blur(${Math.max(0, (noCount-4)*0.6)}px)`;
+      if(opacity <= 0.05){
+        noBtn.style.display = 'none';
+        hint.textContent = "Ya no hay marcha atrás 😌💘";
+      }
+    }
+
+    noBtn.addEventListener('click', () => {
+      noCount++;
+      noBtn.textContent = noTexts[(noCount-1) % noTexts.length];
+      setYesScale();
+      setNoFade();
+      hint.textContent = `Intento #${noCount}… el “Sí” se está poniendo irresistible 💖`;
+    });
+
+    yesBtn.addEventListener('click', () => {
+      // Oculta la pregunta y muestra éxito
+      document.querySelector('.btnRow').style.display = 'none';
+      hint.style.display = 'none';
+      successBox.style.display = 'block';
+
+      // mini “explosión” de corazones extra (rápida)
+      burstHearts();
+    });
+
+    function burstHearts(){
+      // añade corazones momentáneos (solo visual)
+      for(let i=0;i<22;i++){
+        hearts.push({
+          x: (W/2) + rand(-220,220)*devicePixelRatio,
+          y: (H/2) + rand(-40,140)*devicePixelRatio,
+          s: rand(14, 30) * devicePixelRatio,
+          vy: rand(1.3, 2.7) * devicePixelRatio,
+          vx: rand(-0.8, 0.8) * devicePixelRatio,
+          a: rand(0.35, 0.75),
+          rot: rand(-1.2, 1.2),
+          vr: rand(-0.03, 0.03),
+          hue: rand(330, 355)
+        });
+      }
+    }
+
+    /********************
+     * 3) QR CODE (para link)
+     ********************/
+    const urlInput = document.getElementById('urlInput');
+    const qrEl = document.getElementById('qrcode');
+    const regenBtn = document.getElementById('regenBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadQrBtn = document.getElementById('downloadQrBtn');
+    const qrNote = document.getElementById('qrNote');
+
+    let qr;
+
+    function getBestUrl(){
+      // Si está hosteado, usa el link real automáticamente
+      if(window.location.protocol !== 'file:') return window.location.href;
+      // Si es local, usa lo que ponga el usuario
+      return urlInput.value.trim() || "https://TU-LINK-AQUI.com";
+    }
+
+    function renderQR(){
+      const text = getBestUrl();
+      urlInput.value = text;
+
+      qrEl.innerHTML = "";
+      qr = new QRCode(qrEl, {
+        text,
+        width: 130,
+        height: 130,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      if(window.location.protocol === 'file:'){
+        qrNote.innerHTML =
+          "⚠️ Estás abriendo el archivo en tu compu (modo local). Para que ella lo escanee desde su celular, sube esta página a Internet (GitHub Pages / Netlify) y pega aquí el link final.";
+      } else {
+        qrNote.innerHTML =
+          "✅ Ya está listo. Abre este link en tu celular, muestra/manda el QR o descárgalo en PNG.";
+      }
+    }
+
+    regenBtn.addEventListener('click', renderQR);
+
+    copyBtn.addEventListener('click', async () => {
+      const text = getBestUrl();
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "¡Copiado! ✅";
+        setTimeout(()=> copyBtn.textContent="Copiar link", 1200);
+      }catch{
+        alert("No se pudo copiar. Copia manualmente el link del campo.");
+      }
+    });
+
+    downloadQrBtn.addEventListener('click', () => {
+      // qrcodejs puede generar <img> o <canvas>
+      const canvas = qrEl.querySelector('canvas');
+      const img = qrEl.querySelector('img');
+
+      let dataUrl = null;
+
+      if(canvas){
+        dataUrl = canvas.toDataURL("image/png");
+      } else if(img && img.src){
+        dataUrl = img.src; // ya es data:image
+      }
+
+      if(!dataUrl){
+        alert("No se encontró el QR para descargar. Intenta generar el QR otra vez.");
+        return;
+      }
+
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = "qr-san-valentin.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // Inicializa
+    renderQR();
+  </script>
+</body>
+</html>
