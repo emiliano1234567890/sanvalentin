@@ -328,37 +328,6 @@
         <div class="hint">Tenemos una cita pendiente, yo me encargo de eso💘</div>
       </div>
 
-      <!-- QR -->
-      <div class="qrWrap">
-        <div class="qrTitle">
-          <strong>📱 QR para que ella lo escanee</strong>
-          <span style="font-size:12px;color:rgba(255,255,255,.72)">Se genera con el link de la página</span>
-        </div>
-
-        <div class="qrGrid">
-          <div class="field">
-            <label for="urlInput">Link de tu página (si ya la subiste). Si no, déjalo así y luego lo cambias.</label>
-            <input id="urlInput" type="text" spellcheck="false" />
-            <div class="actions">
-              <button class="smallBtn" id="regenBtn">Generar / Actualizar QR</button>
-              <button class="smallBtn" id="copyBtn">Copiar link</button>
-              <button class="smallBtn" id="downloadQrBtn">Descargar QR (PNG)</button>
-            </div>
-            <div class="note" id="qrNote"></div>
-          </div>
-
-          <div class="qrBox">
-            <div id="qrcode"></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Librería QR (CDN) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
   <script>
     /********************
      * 1) CORAZONES (CANVAS)
@@ -499,88 +468,6 @@
         });
       }
     }
-
-    /********************
-     * 3) QR CODE (para link)
-     ********************/
-    const urlInput = document.getElementById('urlInput');
-    const qrEl = document.getElementById('qrcode');
-    const regenBtn = document.getElementById('regenBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadQrBtn = document.getElementById('downloadQrBtn');
-    const qrNote = document.getElementById('qrNote');
-
-    let qr;
-
-    function getBestUrl(){
-      // Si está hosteado, usa el link real automáticamente
-      if(window.location.protocol !== 'file:') return window.location.href;
-      // Si es local, usa lo que ponga el usuario
-      return urlInput.value.trim() || "https://TU-LINK-AQUI.com";
-    }
-
-    function renderQR(){
-      const text = getBestUrl();
-      urlInput.value = text;
-
-      qrEl.innerHTML = "";
-      qr = new QRCode(qrEl, {
-        text,
-        width: 130,
-        height: 130,
-        correctLevel: QRCode.CorrectLevel.H
-      });
-
-      if(window.location.protocol === 'file:'){
-        qrNote.innerHTML =
-          "⚠️ Estás abriendo el archivo en tu compu (modo local). Para que ella lo escanee desde su celular, sube esta página a Internet (GitHub Pages / Netlify) y pega aquí el link final.";
-      } else {
-        qrNote.innerHTML =
-          "✅ Ya está listo. Abre este link en tu celular, muestra/manda el QR o descárgalo en PNG.";
-      }
-    }
-
-    regenBtn.addEventListener('click', renderQR);
-
-    copyBtn.addEventListener('click', async () => {
-      const text = getBestUrl();
-      try{
-        await navigator.clipboard.writeText(text);
-        copyBtn.textContent = "¡Copiado! ✅";
-        setTimeout(()=> copyBtn.textContent="Copiar link", 1200);
-      }catch{
-        alert("No se pudo copiar. Copia manualmente el link del campo.");
-      }
-    });
-
-    downloadQrBtn.addEventListener('click', () => {
-      // qrcodejs puede generar <img> o <canvas>
-      const canvas = qrEl.querySelector('canvas');
-      const img = qrEl.querySelector('img');
-
-      let dataUrl = null;
-
-      if(canvas){
-        dataUrl = canvas.toDataURL("image/png");
-      } else if(img && img.src){
-        dataUrl = img.src; // ya es data:image
-      }
-
-      if(!dataUrl){
-        alert("No se encontró el QR para descargar. Intenta generar el QR otra vez.");
-        return;
-      }
-
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = "qr-san-valentin.png";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    });
-
-    // Inicializa
-    renderQR();
   </script>
 </body>
 </html>
