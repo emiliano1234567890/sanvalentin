@@ -213,14 +213,14 @@
     <div class="card">
       <div class="badge">💘 Para alguien especial</div>
       <h1>¿Quieres ser mi San Valentín?</h1>
-      <p>Prometo risas, abrazos y un día bien bonito contigo 🐼✨</p>
+      <p>Prometo que la pasaremos increible juntos💞</p>
 
       <div class="btnRow" id="btnRow">
         <button id="yesBtn">Sí 💖</button>
-        <button id="noBtn">No 🙈</button>
+        <button id="noBtn">No 👎</button>
       </div>
 
-      <div class="hint" id="hint">Tip: si presionas “No”… pasan cosas 😅</div>
+      <div class="hint" id="hint">Tip: si presionas “No”… pasan cosas</div>
 
       <!-- ÉXITO -->
       <div class="success" id="successBox">
@@ -237,7 +237,7 @@
           <div class="t2">Nunca me voy a arrepentir de haberte conocido.</div>
         </div>
 
-        <div class="hint">Tenemos una cita pendiente, yo me encargo de eso 💘</div>
+        <div class="hint">Tenemos una cita pendiente, yo me encargo de eso</div>
       </div>
 
     </div>
@@ -328,8 +328,8 @@
 
     let noCount = 0;
     const noTexts = [
-      "¿Segura? 🙈", "Piénsalo 😅", "Ándale di que sí 🥺",
-      "No seas así 😭", "Última oportunidad 😳", "Ok… pero ¿segura? 😔"
+      "¿Segura Gelly?", "Piénsalo bien", "Yo se que si quieres",
+      "Mmmmmm", "Última oportunidad", "Ni modo, tendras que aceptar"
     ];
 
     function setYesScale(){
@@ -354,7 +354,7 @@
       noBtn.textContent = noTexts[(noCount-1) % noTexts.length];
       setYesScale();
       setNoFade();
-      hint.textContent = `Intento #${noCount}… el “Sí” se está poniendo irresistible 💖`;
+      hint.textContent = `Intento #${noCount}… Piensa muy bien tú respuesta`;
     });
 
     yesBtn.addEventListener('click', () => {
